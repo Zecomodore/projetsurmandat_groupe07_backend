@@ -10,6 +10,9 @@ use App\Http\Controllers\ListeVehiculeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\VehiculeController;
+use App\Http\Controllers\EmailController;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\MyMail;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -35,7 +38,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('/interventions/ajout/pompier', [ListeUtilisateurController::class, 'ajout_personne_intervenant']);
     Route::delete('/interventions/supprimer/pompier', [ListeUtilisateurController::class, 'suprimer_intervention']);
     Route::get('/interventions/etat/pompier', [ListeUtilisateurController::class, 'get_etat_personne']);
+    Route::get('/changer', [UtilisateurController::class, 'changer_mot_de_passe']);
+
 });
 
+Route::get('/envoie', [UtilisateurController::class, 'envoie_email']);
+Route::get('/validation', [UtilisateurController::class, 'code_validation']);
 
 //Route::get('/interventions', [InterventionController::class, 'get_interventions']);
