@@ -23,20 +23,25 @@ class UtilisateurController extends Controller
     }
 
     public function envoie_email(Request $request){
+        /*
         $envoie_email = new Utilisateur();
         $utilisateur = $envoie_email->envoie_email($request);
+        */
+        $utilisateur = Utilisateur::envoie_email($request);
         return response()->json($utilisateur);
     }
+    
+    
 
     public function code_validation(Request $request){
-        $validation = new Utilisateur();
-        $utilisateur = $validation->code_validation($request);
+        //$validation = new Utilisateur();
+        $utilisateur = Utilisateur::code_validation($request);
         return response()->json($utilisateur);
     }
 
     public function changer_mot_de_passe(Request $request) {
-        $changement = new Utilisateur();
-        $utilisateur = $changement->changer_mot_de_passe($request);
+        //$changement = new Utilisateur();
+        $utilisateur = Utilisateur::changer_mot_de_passe($request);
         return response()->json($utilisateur);
     }
 }

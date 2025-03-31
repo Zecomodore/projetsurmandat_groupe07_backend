@@ -8,7 +8,7 @@ use App\Mail\MyMail;
 
 class EmailController extends Controller
 {
-    public function envoyerEmail(Request $request)
+    public static function envoyerEmail(Request $request)
     {
         $email = $request->email;
         $details = 'Voici le mail pour réinitialiser le mot de passe --- code de vérification : ' . $request->code;
