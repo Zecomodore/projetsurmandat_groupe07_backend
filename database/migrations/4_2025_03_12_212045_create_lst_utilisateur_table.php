@@ -17,7 +17,6 @@ return new class extends Migration
             $table->increments('lsu_no');
             $table->unsignedInteger('lsu_uti_no');
             $table->foreign('lsu_uti_no')->references('uti_no')->on('utilisateur')->onDelete('cascade');
-
             $table->unsignedInteger('lsu_int_no'); 
             $table->foreign('lsu_int_no')->references('int_no')->on('intervention')->onDelete('cascade');
         });
