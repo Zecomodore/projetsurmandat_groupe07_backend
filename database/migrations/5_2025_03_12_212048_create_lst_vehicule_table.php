@@ -15,7 +15,9 @@ return new class extends Migration
 
         Schema::create('lst_vehicule', function (Blueprint $table) {
             $table->increments('lsv_no');
-            $table->timestamp('lsv_temps');
+            $table->timestamp('lsv_depart');
+            $table->timestamp('lsv_arrivee')->nullable();
+            $table->boolean('lsv_present');
 
             $table->unsignedInteger('lsv_veh_no'); 
             $table->foreign('lsv_veh_no')->references('veh_no')->on('vehicule')->onDelete('cascade');

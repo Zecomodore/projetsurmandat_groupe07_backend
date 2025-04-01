@@ -22,7 +22,7 @@ class Utilisateur extends Model
     protected $fillable = [
         'uti_no', 
         'uti_nom', 
-        'uti_prenom', +
+        'uti_prenom',
         'uti_disponible', 
         'uti_use_id']; 
     protected $table = 'utilisateur';

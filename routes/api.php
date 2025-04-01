@@ -39,9 +39,17 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::delete('/interventions/supprimer/pompier', [ListeUtilisateurController::class, 'suprimer_intervention']);
     Route::get('/interventions/etat/pompier', [ListeUtilisateurController::class, 'get_etat_personne']);
     Route::post('/changer', [UtilisateurController::class, 'changer_mot_de_passe']);
+    Route::post('/interventions/ajout/vehicule', [ListeVehiculeController::class, 'ajout_vehicule_intervenant']);
+    Route::put('/interventions/supprimer/vehicule', [ListeVehiculeController::class, 'mettre_fin_intervention']);
+    Route::put('/interventions/arrive/vehicule', [ListeVehiculeController::class, 'mettre_arrive']);
+    Route::get('/interventions/etat/vehicule', [ListeVehiculeController::class, 'get_etat_vehicule']);
 });
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
+
+
+
+
 
 //Route::get('/interventions', [InterventionController::class, 'get_interventions']);
