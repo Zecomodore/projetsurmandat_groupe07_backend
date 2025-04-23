@@ -77,8 +77,11 @@ class Utilisateur extends Model
     }
 
     public static function changer_mot_de_passe(Request $request){
+        if (trim($request->password) === '') {
+            return response()->json(['error' => 'Le mot de passe ne peut pas être vide'], 400);
+        }
+        
         $user = $request->user();
-
 
         if ($request->password === $request->password_confirmation) {
             $user->password = bcrypt($request->password);
