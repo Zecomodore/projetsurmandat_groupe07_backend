@@ -34,4 +34,9 @@ class ListeVehiculeController extends Controller
         $lst_vehicule = ListeVehicule::get_etat_vehicule($request);
         return response()->json($lst_vehicule);
     }
+
+    public function get_est_en_intervention_vehicule(Request $request){
+        $lst_vehicule = ListeVehicule::get_est_en_intervention_vehicule($request);
+        return response()->json($lst_vehicule);
+    }
 }
