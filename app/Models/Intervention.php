@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class Intervention extends Model
 {
     use HasFactory;
-    protected $fillable = ['int_no', 'int_date', 'int_description', 'int_Adresse', 'int_en_cours', 'int_commentaire', 'int_heure'];
+    protected $fillable = ['int_no', 'int_date', 'int_description', /*'int_Adresse',*/ 'int_en_cours', /*'int_commentaire',*/ 'int_heure'];
     protected $table = 'intervention';
     protected $primaryKey = 'int_no';
     public $timestamps = false;
@@ -26,9 +26,9 @@ class Intervention extends Model
         $intervention = new Intervention();
         $intervention->int_date = Carbon::now()->toDateString();
         $intervention->int_description = $request->int_description;
-        $intervention->int_Adresse = $request->int_adresse;
+        //$intervention->int_Adresse = '';//$request->int_adresse;
         $intervention->int_en_cours = true;
-        $intervention->int_commentaire = $request->int_commentaire;
+        //$intervention->int_commentaire = '';//$request->int_commentaire;
         $intervention->int_heure = Carbon::now()->toTimeString();
         $intervention->save();
         return $intervention;

@@ -15,6 +15,7 @@ return new class extends Migration
 
         Schema::create('lst_utilisateur', function (Blueprint $table) {
             $table->increments('lsu_no');
+            $table->boolean('lsu_present');
             $table->unsignedInteger('lsu_uti_no');
             $table->foreign('lsu_uti_no')->references('uti_no')->on('utilisateur')->onDelete('cascade');
             $table->unsignedInteger('lsu_int_no'); 
