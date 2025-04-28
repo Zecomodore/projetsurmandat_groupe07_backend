@@ -92,4 +92,26 @@ class ListeVehicule extends Model
         }
         return true;
     }
+
+    public static function get_est_en_intervention_vehicule(Request $request){
+        $vehicule = Vehicule::where('veh_use_id', $request->veh_use_id)->first();
+    
+        if (!$vehicule) {
+            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+        }
+    
+        $lst_vehicule = ListeVehicule::where('lsv_veh_no', $vehicule->veh_no)
+            ->where('lsv_present', true)
+            ->first();
+    
+        if (!$lst_vehicule) {
+            return response()->json(['resultat' => false]);
+        }
+    
+        return response()->json([
+            'resultat' => true,
+            'lsv_int_no' => $lst_vehicule->lsv_int_no
+        ]);
+    }
+    
 }

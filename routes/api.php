@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/interventions/supprimer/vehicule', [ListeVehiculeController::class, 'mettre_fin_intervention']);
     Route::put('/interventions/arrive/vehicule', [ListeVehiculeController::class, 'mettre_arrive']);
     Route::get('/interventions/etat/vehicule', [ListeVehiculeController::class, 'get_etat_vehicule']);
+    Route::get('/lstvhicule/etat', [ListeVehiculeController::class, 'get_est_en_intervention_vehicule']);
 });
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->date('int_date');
             $table->time('int_heure');
             $table->string('int_description');
-            $table->string('int_adresse');
-            $table->string('int_commentaire');
+            //$table->string('int_adresse');
+            //$table->string('int_commentaire');
             $table->boolean('int_en_cours');
         });
 
