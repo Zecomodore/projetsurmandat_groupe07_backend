@@ -36,7 +36,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/utilisateur/indisponible', [UtilisateurController::class, 'utilisateur_indisponible']);
     Route::put('/utilisateur/disponible', [UtilisateurController::class, 'utilisateur_disponible']);
     Route::post('/interventions/ajout/pompier', [ListeUtilisateurController::class, 'ajout_personne_intervenant']);
-    Route::delete('/interventions/supprimer/pompier', [ListeUtilisateurController::class, 'suprimer_intervention']);
+    Route::put('/interventions/supprimer/pompier', [ListeUtilisateurController::class, 'suprimer_intervention']);
     Route::get('/interventions/etat/pompier', [ListeUtilisateurController::class, 'get_etat_personne']);
     Route::post('/changer', [UtilisateurController::class, 'changer_mot_de_passe']);
     Route::post('/interventions/ajout/vehicule', [ListeVehiculeController::class, 'ajout_vehicule_intervenant']);
@@ -44,6 +44,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/interventions/arrive/vehicule', [ListeVehiculeController::class, 'mettre_arrive']);
     Route::get('/interventions/etat/vehicule', [ListeVehiculeController::class, 'get_etat_vehicule']);
     Route::get('/lstvhicule/etat', [ListeVehiculeController::class, 'get_est_en_intervention_vehicule']);
+    Route::get('/lstutilisateur/etat', [ListeUtilisateurController::class, 'get_est_en_intervention_utilisateur']);
 });
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
