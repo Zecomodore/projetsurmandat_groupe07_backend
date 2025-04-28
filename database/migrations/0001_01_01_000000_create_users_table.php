@@ -20,7 +20,11 @@ return new class extends Migration
             $table->string('code', 255)->nullable(); // Nouvelle colonne pour le code de réinitialisation du mot de passe
             $table->rememberToken();
             $table->timestamps();
+            $table->string('fcm_token')->nullable();
+
         });
+        
+    
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

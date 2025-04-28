@@ -11,6 +11,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UtilisateurController;
 use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\RenfortController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyMail;
 
@@ -46,7 +47,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 });
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
-Route::post('/validation', [UtilisateurController::class, 'code_validation']);
+Route::post('/validation', [UtilisateurController::class, 'code_validation']);use App\Http\Controllers\NotificationController;
+
+Route::post('/demande-renfort', [RenfortController::class, 'demandeRenfort']);
+Route::post('/send-notification', [NotificationController::class, 'sendNotification']);
+
 
 
 
