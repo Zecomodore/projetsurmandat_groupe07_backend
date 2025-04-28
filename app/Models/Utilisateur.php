@@ -95,7 +95,7 @@ class Utilisateur extends Model
         $letters = strtoupper(substr(str_shuffle('ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 2)); // 2 lettres
         return $digits . $letters;
     }
-
+    /*
     public static function envoie_email(Request $request){
         $user = User::where('email', $request->email)->first();
 
@@ -119,6 +119,31 @@ class Utilisateur extends Model
             return response()->json(['message' => 'Email envoyé avec succès // CODE : ' . $code], 200);
         }
     }
+    */
+
+    public static function envoie_email(Request $request){
+        $user = User::where('email', $request->email)->first();
+    
+        if ($user == null) {
+            abort(403, 'Cet email ne correspond à aucun compte');
+        }
+    
+        $code = self::generateVerificationCode();
+    
+        $user->code = $code;
+        $user->save();
+    
+        $emailRequest = new Request([
+            'email' => $user->email,
+            'code' => $code
+        ]);
+    
+        $emailController = new EmailController();
+        $emailController->envoyerEmail($emailRequest);
+    
+        return response()->json(['message' => 'Email envoyé avec succès // CODE : ' . $code], 200);
+    }
+    
     
 
     
