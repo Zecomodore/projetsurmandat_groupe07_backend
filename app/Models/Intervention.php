@@ -34,10 +34,29 @@ class Intervention extends Model
         return $intervention;
     }
 
-    public static function finish_intervention(Request $request){
-        $intervention = Intervention::find($request->int_no);
-        $intervention->int_en_cours = false;
-        $intervention->save();
-        return $intervention;
+    public static function finish_intervention(Request $request)
+{
+    // On récupère l'intervention
+    $intervention = Intervention::find($request->int_no);
+    
+    if (!$intervention) {
+        return response()->json(['error' => 'Intervention not found'], 404);
     }
+
+    // On met l'intervention à "false"
+    $intervention->int_en_cours = false;
+    $intervention->save();
+
+    // On met tous les lst_utilisateur.lsu_present à false pour cette intervention
+    DB::table('lst_utilisateur')
+        ->where('lsu_int_no', $intervention->int_no)
+        ->update(['lsu_present' => false]);
+
+    DB::table('lst_vehicule')
+        ->where('lsv_int_no', $intervention->int_no)
+        ->update(['lsv_present' => false]);
+
+    return $intervention;
+}
+
 }
