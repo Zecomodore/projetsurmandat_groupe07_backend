@@ -31,10 +31,12 @@ class ListeVehicule extends Model
     public static function ajout_vehicule_intervenant(Request $request){
         // Étape 1 : Trouver veh_no à partir de veh_use_id
         $vehicule = Vehicule::where('veh_use_id', $request->veh_use_id)->first();
-        $intervention = Intervention::where('int_no', $request->lsv_int_no)->first();
+        $intervention = Intervention::where('int_no', $request->lsv_int_no)
+        ->where('int_en_cours', true)
+        ->first();
 
-        if (!$vehicule || !$intervention) {
-            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+        if (!$intervention) {
+            abort(404, 'Intervention non trouvée');
         }
         
         // Étape 2 : Ajouter la personne dans ListeVehicule
@@ -92,4 +94,26 @@ class ListeVehicule extends Model
         }
         return true;
     }
+
+    public static function get_est_en_intervention_vehicule(Request $request){
+        $vehicule = Vehicule::where('veh_use_id', $request->veh_use_id)->first();
+    
+        if (!$vehicule) {
+            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+        }
+    
+        $lst_vehicule = ListeVehicule::where('lsv_veh_no', $vehicule->veh_no)
+            ->where('lsv_present', true)
+            ->first();
+    
+        if (!$lst_vehicule) {
+            return response()->json(['resultat' => false]);
+        }
+    
+        return response()->json([
+            'resultat' => true,
+            'lsv_int_no' => $lst_vehicule->lsv_int_no
+        ]);
+    }
+    
 }
