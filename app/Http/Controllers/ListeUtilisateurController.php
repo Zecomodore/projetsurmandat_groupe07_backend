@@ -32,4 +32,9 @@ class ListeUtilisateurController extends Controller
     $lst_utilisateur = ListeUtilisateur::get_etat_personne($request);
     return response()->json($lst_utilisateur);
   }
+
+  public function get_est_en_intervention_utilisateur(Request $request){
+    $lst_utilisateur = ListeUtilisateur::get_est_en_intervention_utilisateur($request);
+    return response()->json($lst_utilisateur);
+  }
 }
