@@ -16,7 +16,7 @@ class EmailController extends Controller
 
         $response = Mail::to($email)->send(new MyMail($details, $subject));
 
-        //return response()->json(['message' => 'Email envoyé avec succès'], 200);
+        return response()->json(['message' => 'Email envoyé avec succès'], 200);
         //return $response;
     }
 }
