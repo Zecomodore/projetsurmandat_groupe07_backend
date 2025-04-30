@@ -14,7 +14,7 @@ class UtilisateurSeeder extends Seeder
             ['uti_nom' => 'Martin', 'uti_prenom' => 'Paul', 'uti_disponible' => true, 'uti_use_id' => 3],
             ['uti_nom' => 'Barros', 'uti_prenom' => 'bryan', 'uti_disponible' => true, 'uti_use_id' => 4],
             ['uti_nom' => 'Lam', 'uti_prenom' => 'Kilian', 'uti_disponible' => true, 'uti_use_id' => 5],
-            ['uti_nom' => 'admin', 'uti_prenom' => 'admin', 'uti_disponible' => true, 'uti_use_id' => 5],
+            ['uti_nom' => 'admin', 'uti_prenom' => 'admin', 'uti_disponible' => true, 'uti_use_id' => 6],
         ]);
     }
 }
