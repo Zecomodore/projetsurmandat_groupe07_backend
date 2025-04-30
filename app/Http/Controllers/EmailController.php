@@ -15,7 +15,9 @@ class EmailController extends Controller
         $subject = 'Code de réinitialisation du mot de passe';
 
         $response = Mail::to($email)->send(new MyMail($details, $subject));
-        
+
+        //return response()->json(['message' => 'Email envoyé avec succès'], 200);
+        //return $response;
     }
 }
 
