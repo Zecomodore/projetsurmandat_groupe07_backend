@@ -97,4 +97,6 @@ class VehiculeTest extends TestCase
         $result = Vehicule::vehicule_disponible($request);
         $this->assertNull($result);
     }
+
+
 }
