@@ -56,14 +56,14 @@ class UtilisateurTest extends TestCase
     {
         $utilisateur = new Utilisateur;
         $uti = $utilisateur->get_utilisteur(5);
-        $this->assertTrue(true, $uti->first()->uti_disponible);
+        $this->assertEquals(1, $uti->first()->uti_disponible);
 
         $request = new Request([
-            'uti_use_no' => 5,
+            'uti_use_no' => 5, 
         ]);
         $response = $utilisateur->utilisateur_indisponible($request);
-
-        $this->assertFalse(false, $response->first()->uti_disponible);
+        $this->assertEquals('Kilian' , $response->uti_prenom);
+        $this->assertEquals(0 , $response->uti_disponible);
     }
 
     /** @test */
@@ -74,11 +74,90 @@ class UtilisateurTest extends TestCase
         $this->assertNull($uti->first());
 
         $request = new Request([
-            'uti_use_no' => 999,
+            'uti_use_no' => 999, 
         ]);
         $response = $utilisateur->utilisateur_indisponible($request);
-
         $this->assertNull($response);
+    }
+
+    // ===================== utilisateur_disponible =====================
+    /** @test */
+    public function test_utilisateur_disponible()
+    {
+        $utilisateur = new Utilisateur;
+        $req = new Request([
+            'uti_use_no' => 5, 
+        ]);
+        $uti = $utilisateur->utilisateur_indisponible($req);
+        $this->assertEquals(0, $uti->uti_disponible);
+
+        $request = new Request([
+            'uti_use_no' => 5, 
+        ]);
+        $response = $utilisateur->utilisateur_disponible($request);
+        $this->assertEquals('Kilian' , $response->uti_prenom);
+        $this->assertEquals(1 , $response->uti_disponible);
+    }
+
+    /** @test */
+    public function test_utilisateur_disponible_error()
+    {
+        $utilisateur = new Utilisateur;
+        $uti = $utilisateur->get_utilisteur(999);
+        $this->assertNull($uti->first());
+
+        $request = new Request([
+            'uti_use_no' => 999, 
+        ]);
+        $response = $utilisateur->utilisateur_indisponible($request);
+        $this->assertNull($response);
+    }
+
+    // ===================== code_validation =====================
+    /** @test */
+    public function test_code_validation()
+    {
+        // Création d'un utilisateur avec un code (temporairement pour le test)
+        $user = \App\Models\User::factory()->create([
+            'email' => 'test@example.com',
+            'code' => '123KL',
+            'password' => bcrypt('ancienMotDePasse'),
+        ]);
+
+        // Création de la requête avec le bon code
+        $request = new Request([
+            'code' => '123KL'
+        ]);
+
+        // Appel de la méthode
+        $utilisateur = new Utilisateur;
+        $response = $utilisateur->code_validation($request);
+
+        // Vérifie que la réponse contient un token (ou autre indicateur d'authentification)
+        $this->assertEquals(200, $response->status());
+        $this->assertArrayHasKey('token', $response->getData(true));
+
+        // Vérifie que le code est null dans la BDD
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'code' => null
+        ]);
+    }
+
+    /** @test */
+    public function test_code_validation_echec()
+    {
+        // Aucun utilisateur avec ce code
+        $request = new Request([
+            'code' => 'code_incorrect'
+        ]);
+
+        // Appel de la méthode
+        $utilisateur = new Utilisateur;
+        $response = $utilisateur->code_validation($request);
+
+        $this->assertEquals(403, $response->status());
+        $this->assertEquals(['error' => 'Code incorrect'], $response->getData(true));
     }
 
     // ===================== envoyer_email =====================
