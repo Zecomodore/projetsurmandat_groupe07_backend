@@ -34,6 +34,14 @@ class Utilisateur extends Model
         return $utilisateur;
     }
 
+    public static function get_all_utilisateurs(){
+        $utilisateurs = Utilisateur::all();
+        return response()->json($utilisateurs);
+    }
+    
+    
+    
+
     public static function utilisateur_indisponible(Request $request){
         $utilisateur = Utilisateur::where('uti_use_id', $request->uti_use_no)->first(); 
 
