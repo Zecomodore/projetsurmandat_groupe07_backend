@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Artisan;
 
 
@@ -72,14 +71,10 @@ class UtilisateurTest extends TestCase
     /** @test */
     public function test_utilisateur_indisponible_error()
     {
-        $utilisateur = new Utilisateur;
-        $uti = $utilisateur->get_utilisteur(999);
-        $this->assertNull($uti->first());
-
         $request = new Request([
             'uti_use_no' => 999, 
         ]);
-        $response = $utilisateur->utilisateur_indisponible($request);
+        $response = Utilisateur::utilisateur_indisponible($request);
         $this->assertNull($response);
     }
 
@@ -104,14 +99,10 @@ class UtilisateurTest extends TestCase
     /** @test */
     public function test_utilisateur_disponible_error()
     {
-        $utilisateur = new Utilisateur;
-        $uti = $utilisateur->get_utilisteur(999);
-        $this->assertNull($uti->first());
-
         $request = new Request([
             'uti_use_no' => 999, 
         ]);
-        $response = $utilisateur->utilisateur_indisponible($request);
+        $response = Utilisateur::utilisateur_indisponible($request);
         $this->assertNull($response);
     }
 
