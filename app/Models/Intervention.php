@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class Intervention extends Model
 {
@@ -23,15 +24,24 @@ class Intervention extends Model
     }
 
     public static function create_intervention(Request $request){
-        $intervention = new Intervention();
-        $intervention->int_date = Carbon::now()->toDateString();
-        $intervention->int_description = $request->int_description;
-        //$intervention->int_Adresse = '';//$request->int_adresse;
-        $intervention->int_en_cours = true;
-        //$intervention->int_commentaire = '';//$request->int_commentaire;
-        $intervention->int_heure = Carbon::now()->toTimeString();
-        $intervention->save();
-        return $intervention;
+        $validator = Validator::make($request->all(), [
+            'int_description' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            abort(422, $validator->errors()->first('int_description'));
+        }
+        else {
+            $intervention = new Intervention();
+            $intervention->int_date = Carbon::now()->toDateString();
+            $intervention->int_description = $request->int_description;
+            //$intervention->int_Adresse = '';//$request->int_adresse;
+            $intervention->int_en_cours = true;
+            //$intervention->int_commentaire = '';//$request->int_commentaire;
+            $intervention->int_heure = Carbon::now()->toTimeString();
+            $intervention->save();
+            return $intervention;
+        }
     }
 
     public static function finish_intervention(Request $request)
