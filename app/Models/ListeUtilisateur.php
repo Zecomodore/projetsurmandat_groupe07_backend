@@ -73,9 +73,19 @@ class ListeUtilisateur extends Model
 
     public static function suprimer_intervention(Request $request){
         $utilisateur = Utilisateur::where('uti_use_id', $request->uti_use_id)->first();
+
+        if (!$utilisateur) {
+            abort(404, 'Utilisateur non trouvé');
+        }
+    
         $lst_utilisateur = ListeUtilisateur::where('lsu_int_no', $request->lsu_int_no)
         ->where('lsu_uti_no', $utilisateur->uti_no)
         ->first();
+
+        if (!$lst_utilisateur) {
+            abort(404, 'Liaison utilisateur/intervention non trouvée');
+        }
+
         $lst_utilisateur->lsu_present = false;
         $lst_utilisateur->save();
         return $lst_utilisateur;
@@ -86,7 +96,7 @@ class ListeUtilisateur extends Model
 
         // Si l'utilisateur n'existe pas, renvoyer une erreur ou false
         if (!$utilisateur) {
-            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+            abort(404, 'Utilisateur non trouvé');
         }
 
         // Vérifier la correspondance dans `ListeUtilisateur`
@@ -106,7 +116,7 @@ class ListeUtilisateur extends Model
         $utilisateur = Utilisateur::where('uti_use_id', $request->uti_use_id)->first();
     
         if (!$utilisateur) {
-            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+            abort(404, 'Utilisateur non trouvé');
         }
     
         $lst_utilisateur = ListeUtilisateur::where('lsu_uti_no', $utilisateur->uti_no)
