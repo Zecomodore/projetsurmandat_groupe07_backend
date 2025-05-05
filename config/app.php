@@ -123,4 +123,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    Kreait\Laravel\Firebase\ServiceProvider::class,
+    'aliases' => [
+    'FirebaseMessaging' => Kreait\Laravel\Firebase\Facades\FirebaseMessaging::class,
+],
+
 ];

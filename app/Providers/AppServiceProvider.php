@@ -3,15 +3,19 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Kreait\Firebase\Factory;
+use Kreait\Firebase\Messaging;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
      * Register any application services.
      */
-    public function register(): void
+    public function register()
     {
-        //
+        $this->app->bind(Messaging::class, function ($app) {
+            return app('firebase.messaging');
+        });
     }
 
     /**
@@ -22,3 +26,4 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 }
+

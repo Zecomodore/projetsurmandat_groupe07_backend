@@ -13,6 +13,8 @@ use App\Http\Controllers\VehiculeController;
 use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyMail;
+use App\Http\Controllers\Api\NotificationController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -51,6 +53,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/store-fcm-token', [NotificationController::class, 'storeToken']);
+    Route::post('/send-alerte', [NotificationController::class, 'sendAlerte']);
+    Route::post('/send-renfort', [NotificationController::class, 'sendRenfort']);
+});
 
 
 
