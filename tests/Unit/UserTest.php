@@ -29,7 +29,7 @@ class UserTest extends TestCase
         ];
         $user = User::create($data);
 
-        // tester la connexion avec l'utilisateur précédement créé
+        // tester si les données sont bien enregistrées dans la base de données
         $this->assertDatabaseHas('users', [
             'email' => 'john@example.com',
             'code' => '1234AB',

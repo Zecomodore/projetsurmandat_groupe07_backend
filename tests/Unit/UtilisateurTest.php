@@ -122,7 +122,6 @@ class UtilisateurTest extends TestCase
             'code' => '1234KL'
         ]);
 
-        // Appel de la méthode
         $response = Utilisateur::code_validation($request);
 
         // Vérifie que la réponse contient un token (ou autre indicateur d'authentification)
