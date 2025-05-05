@@ -24,7 +24,7 @@ class VehiculeTest extends TestCase
         ]);
     }
 
-    // ===================== get_utilisateur =====================
+    // ===================== get_vehicule =====================
     /** @test */
     public function test_get_vehicule_sucess()
     {
@@ -33,6 +33,7 @@ class VehiculeTest extends TestCase
         // Assert : vérifier que le résultat contient bien le véhicule créé
         $this->assertCount(1, $result);
         $this->assertEquals(2, $result->first()->veh_use_id);
+        $this->assertEquals('Camion de pompiers', $result->first()->veh_nom);
     }
 
     /** @test */
