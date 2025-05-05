@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/interventions/utilisateur/{id}', [ListeUtilisateurController::class, 'get_personne_intervenant']);
     Route::get('/interventions/vehicule/{id}', [ListeVehiculeController::class, 'get_vehicule_intervention']);
     Route::get('/utilisateur/info/{id}',[UtilisateurController::class, 'get_utilisateur']);
+    Route::get('/utilisateurs', [UtilisateurController::class, 'get_all_utilisateurs']);
     Route::get('/vehicule/info/{id}',[VehiculeController::class, 'get_vehicule']);
     Route::put('/vehicule/indisponible', [VehiculeController::class, 'vehicule_indisponible']);
     Route::put('/vehicule/disponible', [VehiculeController::class, 'vehicule_disponible']);
