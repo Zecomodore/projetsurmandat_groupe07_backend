@@ -218,8 +218,6 @@ class ListeVehiculeTest extends TestCase
 
         $response = ListeVehicule::get_est_en_intervention_vehicule($request);
 
-        // Vérification
-        // ============= /!\ ================
         $this->assertEquals(200, $response->status());
         $this->assertNotNull($response);
 
