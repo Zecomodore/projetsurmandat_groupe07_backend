@@ -18,7 +18,7 @@ class Intervention extends Model
 
 
     public static function get_interventions(){
-        $interventions = Intervention::where('int_en_cours', true)->get();
+        $interventions = Intervention::all();
         return $interventions;
     }
 

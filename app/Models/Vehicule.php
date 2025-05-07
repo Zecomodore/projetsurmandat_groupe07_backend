@@ -19,6 +19,11 @@ class Vehicule extends Model
     protected $primaryKey = 'veh_no';
     public $timestamps = false;
 
+    public static function get_all_vehicules(){
+        $vehicules = Vehicule::all();
+        return response()->json($vehicules);
+    }
+    
     public static function get_vehicule($id){
         $vehicule = Vehicule::where('veh_use_id', $id)->get();
         return $vehicule;

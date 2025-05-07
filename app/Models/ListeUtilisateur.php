@@ -21,6 +21,15 @@ class ListeUtilisateur extends Model
     public $timestamps = false;
 
 
+    public static function getUtilisateursParIntervention($idIntervention){
+    return DB::table('lst_utilisateur')
+        ->join('utilisateur', 'lst_utilisateur.lsu_uti_no', '=', 'utilisateur.uti_no')
+        ->where('lst_utilisateur.lsu_int_no', $idIntervention)
+        ->select('utilisateur.uti_nom', 'utilisateur.uti_prenom', 'lst_utilisateur.lsu_present')
+        ->get();
+    }
+
+
     public static function get_personne_intervenant($idIntervention){
         $lst_utilisateur = DB::table ('lst_utilisateur')
         ->join('utilisateur', 'lst_utilisateur.lsu_uti_no', '=', 'utilisateur.uti_no')
