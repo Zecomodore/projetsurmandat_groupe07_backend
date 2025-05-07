@@ -19,7 +19,7 @@ class InterventionController extends Controller
     }
 
     public function create_intervention(Request $request){
-        if ($request->user()->name !== 'ChefIntervention') {
+        if ($request->user()->name !== 'ChefIntervention' && $request->user()->name !== 'Admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

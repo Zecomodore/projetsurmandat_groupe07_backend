@@ -7,6 +7,19 @@ use App\Models\ListeUtilisateur;
 
 class ListeUtilisateurController extends Controller
 {
+
+  public function getPersonnesParIntervention($id)
+    {
+        $utilisateurs = ListeUtilisateur::get_personne_intervenant($id);
+
+        if ($utilisateurs->isEmpty()) {
+            return response()->json(['message' => 'Aucun utilisateur trouvé pour cette intervention.'], 404);
+        }
+
+        return response()->json($utilisateurs, 200);
+    }
+
+
   public function get_personne_intervenant($id,Request $request){
     if ($request->user()->name !== 'ChefIntervention') {
         return response()->json(['message' => 'Unauthorized'], 403);

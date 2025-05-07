@@ -7,6 +7,13 @@ use App\Models\Utilisateur;
 
 class UtilisateurController extends Controller
 {
+    //Get all pour admin
+    public function get_all_utilisateurs(){
+        $utilisateurs = Utilisateur::all();
+        return response()->json($utilisateurs, 200);
+    }
+    
+
     public function get_utilisateur($id){
         $utilisateur = Utilisateur::get_utilisteur($id);
         return response()->json($utilisateur);

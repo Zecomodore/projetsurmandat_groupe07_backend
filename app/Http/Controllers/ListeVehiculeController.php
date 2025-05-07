@@ -7,6 +7,19 @@ use App\Models\ListeVehicule;
 
 class ListeVehiculeController extends Controller
 {
+    
+
+    public function get_vehicules_par_intervention($id, Request $request){
+    $vehicules = ListeVehicule::get_vehicules_par_intervention($id);
+
+    if ($vehicules->isEmpty()) {
+        return response()->json(['message' => 'Aucun véhicule trouvé pour cette intervention.'], 404);
+    }
+
+    return response()->json($vehicules, 200);
+    }
+
+
     public function get_vehicule_intervention($id,Request $request){
         if ($request->user()->name !== 'ChefIntervention') {
             return response()->json(['message' => 'Unauthorized'], 403);

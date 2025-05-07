@@ -46,7 +46,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/interventions/etat/vehicule', [ListeVehiculeController::class, 'get_etat_vehicule']);
     Route::get('/lstvhicule/etat', [ListeVehiculeController::class, 'get_est_en_intervention_vehicule']);
     Route::get('/lstutilisateur/etat', [ListeUtilisateurController::class, 'get_est_en_intervention_utilisateur']);
-});
+    Route::get('/admin/liste_utilisateur/intervention/{id}', [ListeUtilisateurController::class, 'getPersonnesParIntervention']);
+    Route::get('/admin/interventions/vehicules/{id}', [ListeVehiculeController::class, 'get_vehicules_par_intervention']);
+    Route::get('/admin/vehicules', [VehiculeController::class, 'get_all_vehicules']);});
+    Route::get('/admin/utilisateurs', [UtilisateurController::class, 'get_all_utilisateurs']);
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);

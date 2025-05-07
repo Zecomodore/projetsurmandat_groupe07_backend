@@ -39,9 +39,6 @@ class Utilisateur extends Model
         return response()->json($utilisateurs);
     }
     
-    
-    
-
     public static function utilisateur_indisponible(Request $request){
         $utilisateur = Utilisateur::where('uti_use_id', $request->uti_use_no)->first(); 
 
