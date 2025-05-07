@@ -53,6 +53,26 @@ class UtilisateurTest extends TestCase
         $this->assertNull($response->first());
     }
 
+    // ===================== get_all_utilisateurs =====================
+    /** @test */
+    public function test_get_all_utilisateurs_succes()
+    {
+        $response = Utilisateur::get_all_utilisateurs();
+
+        $this->assertCount(5, $response->original);
+        $this->assertEquals(200, $response->status());
+        $this->assertEquals('Jean', $response->original[0]->uti_prenom);
+        $this->assertEquals('Dupont', $response->original[0]->uti_nom);
+        $this->assertEquals('Paul', $response->original[1]->uti_prenom);
+        $this->assertEquals('Martin', $response->original[1]->uti_nom);
+        $this->assertEquals('bryan', $response->original[2]->uti_prenom);
+        $this->assertEquals('Barros', $response->original[2]->uti_nom);
+        $this->assertEquals('Kilian', $response->original[3]->uti_prenom);
+        $this->assertEquals('Lam', $response->original[3]->uti_nom);
+        $this->assertEquals('admin', $response->original[4]->uti_prenom);
+        $this->assertEquals('admin', $response->original[4]->uti_nom);
+    }
+
     // ===================== utilisateur_indisponible =====================
     /** @test */
     public function test_utilisateur_indisponible_succes()
