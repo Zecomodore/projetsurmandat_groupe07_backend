@@ -9,15 +9,18 @@ class ListeUtilisateurController extends Controller
 {
 
   public function getPersonnesParIntervention($id)
-    {
-        $utilisateurs = ListeUtilisateur::get_personne_intervenant($id);
-
-        if ($utilisateurs->isEmpty()) {
-            return response()->json(['message' => 'Aucun utilisateur trouvé pour cette intervention.'], 404);
-        }
-
-        return response()->json($utilisateurs, 200);
-    }
+  {
+      // Appeler la méthode du modèle pour récupérer les personnes liées à une intervention
+      $utilisateurs = ListeUtilisateur::getPersonnesParIntervention($id);
+  
+      // Vérifier si des utilisateurs ont été trouvés
+      if ($utilisateurs->isEmpty()) {
+          return response()->json(['message' => 'Aucun utilisateur trouvé pour cette intervention.'], 404);
+      }
+  
+      // Retourner les utilisateurs trouvés
+      return response()->json($utilisateurs, 200);
+  }
 
 
   public function get_personne_intervenant($id,Request $request){

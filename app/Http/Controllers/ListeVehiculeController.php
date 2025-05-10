@@ -10,13 +10,11 @@ class ListeVehiculeController extends Controller
     
 
     public function get_vehicules_par_intervention($id, Request $request){
-    $vehicules = ListeVehicule::get_vehicules_par_intervention($id);
-
-    if ($vehicules->isEmpty()) {
-        return response()->json(['message' => 'Aucun véhicule trouvé pour cette intervention.'], 404);
-    }
-
-    return response()->json($vehicules, 200);
+        $vehicules = ListeVehicule::get_vehicules_par_intervention($id);
+        if ($vehicules->isEmpty()) {
+            return response()->json(['message' => 'Aucun véhicule trouvé pour cette intervention.'], 404);
+        }
+        return response()->json($vehicules, 200);
     }
 
 

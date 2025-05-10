@@ -19,11 +19,11 @@ class ListeVehicule extends Model
 
 
     public static function get_vehicules_par_intervention($idIntervention){
-    return DB::table('lst_vehicule')
-        ->join('vehicule', 'lst_vehicule.lsv_veh_no', '=', 'vehicule.veh_no')
-        ->where('lst_vehicule.lsv_int_no', $idIntervention)
-        ->select('vehicule.veh_nom', 'lst_vehicule.lsv_depart', 'lst_vehicule.lsv_arrivee', 'lst_vehicule.lsv_present')
-        ->get();
+        return DB::table('lst_vehicule')
+            ->join('vehicule', 'lst_vehicule.lsv_veh_no', '=', 'vehicule.veh_no')
+            ->where('lst_vehicule.lsv_int_no', $idIntervention)
+            ->select('vehicule.veh_nom', 'lst_vehicule.lsv_depart', 'lst_vehicule.lsv_arrivee', 'lst_vehicule.lsv_present')
+            ->get();
     }
 
     public static function get_vehicule_intervention($idIntervention){
