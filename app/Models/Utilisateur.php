@@ -29,14 +29,119 @@ class Utilisateur extends Model
     protected $primaryKey = 'uti_no';
     public $timestamps = false;
 
+
+    //Get all pour admin
+    public static function get_all_utilisateurs(){
+        return DB::table('utilisateur')
+            ->join('users', 'utilisateur.uti_use_id', '=', 'users.id')
+            ->select(
+                'utilisateur.uti_no',
+                'utilisateur.uti_nom',
+                'utilisateur.uti_prenom',
+                'utilisateur.uti_disponible',
+                'users.name as user_name',
+                'users.email as user_email'
+            )
+            ->get();
+        }
+        
+
+
+    public static function get_utilisateur_Admin($id)
+    {
+        return DB::table('utilisateur')
+            ->join('users', 'utilisateur.uti_use_id', '=', 'users.id')
+            ->where('utilisateur.uti_no', $id)
+            ->select(
+                'utilisateur.uti_no',
+                'utilisateur.uti_nom',
+                'utilisateur.uti_prenom',
+                'utilisateur.uti_disponible',
+                'users.name as user_name',
+                'users.email as user_email'
+            )
+            ->first();
+    }
+
+    public static function delete_utilisateur($id)
+    {
+        // Trouver l'utilisateur
+        $utilisateur = self::where('uti_no', $id)->first();
+        if (!$utilisateur) {
+            return false; // Retourne false si l'utilisateur n'est pas trouvé
+        }
+    
+        // Trouver le User associé
+        $user = User::where('id', $utilisateur->uti_use_id)->first();
+        if (!$user) {
+            return false; // Retourne false si le User n'est pas trouvé
+        }
+    
+        // Supprimer l'utilisateur et le User associé
+        $utilisateur->delete();
+        $user->delete();
+    
+        return true; // Retourne true si la suppression a réussi
+    }
+
+    public static function update_utilisateur(Request $request, $id)
+    {
+        $utilisateur = self::where('uti_no', $id)->first();
+    
+        if (!$utilisateur) {
+            return null; // Retourne null si l'utilisateur n'est pas trouvé
+        }
+    
+        $user = User::where('id', $utilisateur->uti_use_id)->first();
+    
+        if (!$user) {
+            return null; // Retourne null si le User n'est pas trouvé
+        }
+    
+        // Mettre à jour les informations de base
+        $utilisateur->uti_nom = $request->input('nom', $utilisateur->uti_nom);
+        $utilisateur->uti_prenom = $request->input('prenom', $utilisateur->uti_prenom);
+        $user->email = $request->input('email', $user->email);
+        $user->name = $request->input('name', $user->name);
+    
+        // Vérifier et mettre à jour le mot de passe
+        if ($request->filled('ancien_mot_de_passe') && $request->filled('nouveau_mot_de_passe')) {
+            if (!Hash::check($request->input('ancien_mot_de_passe'), $user->password)) {
+                return false; // Retourne false si l'ancien mot de passe est incorrect
+            }
+    
+            $user->password = Hash::make($request->input('nouveau_mot_de_passe'));
+        }
+    
+        $utilisateur->save();
+        $user->save();
+    
+        return $utilisateur; // Retourne l'utilisateur mis à jour
+    }
+    public static function creerUtilisateur(Request $request)
+    {
+    $user = new User();
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->password =  Hash::make($request->password);
+    $user->save();
+
+    $utilisateur = new Utilisateur();
+    $utilisateur->uti_nom = $request->nom;
+    $utilisateur->uti_prenom = $request->prenom;
+    $utilisateur->uti_disponible = true;
+    $utilisateur->uti_use_id = $user->id;
+    $utilisateur->save();
+
+    return response()->json([
+        'message' => 'Utilisateur et User créés avec succès',
+        'utilisateur' => $utilisateur,
+        'user' => $user
+    ], 201);
+    }
     public static function get_utilisteur($id){
         $utilisateur = Utilisateur::where('uti_use_id', $id)->get();
         return $utilisateur;
-    }
-
-    public static function get_all_utilisateurs(){
-        $utilisateurs = Utilisateur::all();
-        return response()->json($utilisateurs);
     }
     
     public static function utilisateur_indisponible(Request $request){
