@@ -14,6 +14,8 @@ use App\Http\Controllers\EmailController;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MyMail;
 
+use App\Http\Controllers\FirebaseTestController;
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -65,6 +67,9 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
 
+
+Route::get('/firebase-test', [FirebaseTestController::class, 'test']);
+Route::get('/send-firebase-notification', [FirebaseTestController::class, 'sendNotification']);
 
 
 
