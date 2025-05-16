@@ -45,9 +45,7 @@ class Utilisateur extends Model
             ->get();
         }
         
-
-
-    public static function get_utilisateur_Admin($id)
+    public static function get_utilisateur_admin($id)
     {
         return DB::table('utilisateur')
             ->join('users', 'utilisateur.uti_use_id', '=', 'users.id')
@@ -105,12 +103,15 @@ class Utilisateur extends Model
         $user->name = $request->input('name', $user->name);
     
         // Vérifier et mettre à jour le mot de passe
-        if ($request->filled('ancien_mot_de_passe') && $request->filled('nouveau_mot_de_passe')) {
+        if ($request->filled('ancien_mot_de_passe') && $request->filled('nouveau_mot_de_passe')) {        
             if (!Hash::check($request->input('ancien_mot_de_passe'), $user->password)) {
-                return false; // Retourne false si l'ancien mot de passe est incorrect
+                return false; // Ancien mot de passe incorrect
             }
-    
+            
             $user->password = Hash::make($request->input('nouveau_mot_de_passe'));
+        }
+        else {
+            abort(400, 'Le mot de passe ne peut pas être vide');
         }
     
         $utilisateur->save();
@@ -118,27 +119,29 @@ class Utilisateur extends Model
     
         return $utilisateur; // Retourne l'utilisateur mis à jour
     }
+
     public static function creerUtilisateur(Request $request)
     {
-    $user = new User();
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->password =  Hash::make($request->password);
-    $user->save();
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-    $utilisateur = new Utilisateur();
-    $utilisateur->uti_nom = $request->nom;
-    $utilisateur->uti_prenom = $request->prenom;
-    $utilisateur->uti_disponible = true;
-    $utilisateur->uti_use_id = $user->id;
-    $utilisateur->save();
+        $utilisateur = new Utilisateur();
+        $utilisateur->uti_nom = $request->nom;
+        $utilisateur->uti_prenom = $request->prenom;
+        $utilisateur->uti_disponible = true;
+        $utilisateur->uti_use_id = $user->id;
+        $utilisateur->save();
 
-    return response()->json([
-        'message' => 'Utilisateur et User créés avec succès',
-        'utilisateur' => $utilisateur,
-        'user' => $user
-    ], 201);
+        return response()->json([
+            'message' => 'Utilisateur et User créés avec succès',
+            'utilisateur' => $utilisateur,
+            'user' => $user
+        ], 201);
     }
+    
     public static function get_utilisteur($id){
         $utilisateur = Utilisateur::where('uti_use_id', $id)->get();
         return $utilisateur;
