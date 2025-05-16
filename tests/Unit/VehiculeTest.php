@@ -99,5 +99,75 @@ class VehiculeTest extends TestCase
         $this->assertNull($result);
     }
 
+    // ===================== creerVehicule =====================
+    /** @test */
+    public function test_creerVehicule_success() {
+        $request = new Request([
+            'role' => 'Test User',
+            'email' => 'test@gmail.com',
+            'password' => '123',
+            'veh_nom' => 'Camion de secours',
+        ]);
 
+        $response = Vehicule::creerVehicule($request);
+        $data = $response->getData(true);
+
+        $this->assertEquals(201, $response->status());
+        $this->assertEquals('Camion de secours', $data['vehicule']['veh_nom']);
+        $this->assertEquals('Test User', $data['user']['name']);
+    }
+
+    /** @test */
+    public function test_creerVehicule_mdp_vide() {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectExceptionMessage('Le mot de passe ne peut pas être vide');
+
+        $request = new Request([
+            'role' => 'Test User',
+            'email' => 'test@gmail.com',
+            'password' => '',
+            'veh_nom' => 'Camion de secours',
+        ]);
+
+        $response = Vehicule::creerVehicule($request);
+    }
+
+    // ===================== modifierVehicule =====================
+    /** @test */
+    public function test_modifierVehicule_success() {
+        $request = new Request([
+            'veh_nom' => 'Camion de secours modifié',
+            'veh_disponible' => 1,
+            'email' => 'NewEmail',
+        ]);
+
+        $response = Vehicule::modifierVehicule($request, 1);
+
+        $this->assertEquals(200, $response->status());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Véhicule et utilisateur mis à jour avec succès', $data['message']);
+
+        $this->assertEquals('Camion de secours modifié', $data['vehicule']['veh_nom']);
+        $this->assertEquals(1, $data['vehicule']['veh_disponible']);
+        $this->assertEquals('NewEmail', $data['user']['email']);
+    }
+
+    // ===================== deleteVehicule =====================
+    /** @test */
+    public function test_deleteVehicule_success() {
+        $response = Vehicule::deleteVehicule(1);
+
+        $this->assertEquals(200, $response->status());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Véhicule et utilisateur associé supprimés avec succès', $data['message']);
+    }
+
+    /** @test */
+    public function test_deleteVehicule_error() {
+        $response = Vehicule::deleteVehicule(999);
+
+        $this->assertEquals(404, $response->status());
+        $data = json_decode($response->getContent(), true);
+        $this->assertEquals('Véhicule non trouvé', $data['message']);
+    }
 }

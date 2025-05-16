@@ -55,10 +55,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/admin/modifierutilisateur/{id}', [UtilisateurController::class, 'update_utilisateur']); // OK
     Route::delete('/admin/supprimerutilisateur/{id}', [UtilisateurController::class, 'delete_utilisateur']); // OK
 
-    Route::post('/admin/creervehicule', [VehiculeController::class, 'creerVehicule']); // à faire
-    Route::get('/admin/vehicule/{id}', [VehiculeController::class, 'get_vehicule_admin']); // à faire
-    Route::put('/admin/modifiervehicule/{id}', [VehiculeController::class, 'modifierVehicule']); // à faire
-    Route::delete('/admin/supprimervehicule/{id}', [VehiculeController::class, 'deleteVehicule']); // à faire
+    Route::post('/admin/creervehicule', [VehiculeController::class, 'creerVehicule']); // OK
+    Route::get('/admin/vehicule/{id}', [VehiculeController::class, 'get_vehicule_admin']); // déjà existant
+    Route::put('/admin/modifiervehicule/{id}', [VehiculeController::class, 'modifierVehicule']); // OK
+    Route::delete('/admin/supprimervehicule/{id}', [VehiculeController::class, 'deleteVehicule']); // OK
     Route::get('/admin/utilisateur/{id}', [UtilisateurController::class, 'get_utilisateur_admin']); // OK
 });
 

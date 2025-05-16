@@ -122,6 +122,10 @@ class Utilisateur extends Model
 
     public static function creerUtilisateur(Request $request)
     {
+        if (trim($request->password) === '') {
+            abort(400, 'Le mot de passe ne peut pas être vide');
+        }
+        
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;

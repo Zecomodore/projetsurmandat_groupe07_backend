@@ -22,6 +22,10 @@ class Vehicule extends Model
 
     public static function creerVehicule(Request $request)
     {
+        if (trim($request->password) === '') {
+            abort(400, 'Le mot de passe ne peut pas être vide');
+        }
+
         // Créer un utilisateur associé au véhicule
         $user = new User();
         $user->name = $request->role; // Utiliser 'role' au lieu de 'name'
@@ -65,6 +69,7 @@ class Vehicule extends Model
     
         return response()->json(['message' => 'Véhicule et utilisateur associé supprimés avec succès'], 200);
     }
+    
     public static function modifierVehicule(Request $request, $id){
         // Trouver le véhicule par son ID
         $vehicule = Vehicule::where('veh_no', $id)->first();

@@ -338,6 +338,26 @@ class UtilisateurTest extends TestCase
         $this->assertEquals('www', $data['utilisateur']['uti_nom']);
         $this->assertEquals('test', $data['user']['name']);
         $this->assertEquals('test@gmail.com', $data['user']['email']);
+        
+    }
+
+    /** @test */
+    public function test_creer_utilisateur_mdp_vide()
+    {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectExceptionMessage('Le mot de passe ne peut pas être vide');
+
+        // Créer une requête simulée avec des données d'utilisateur
+        $request = new Request([
+            'name' => 'test',
+            'email' => 'test@gmail.com',
+            'password' => '',
+            'nom' => 'www',
+            'prenom' => 'www',
+        ]);
+
+        // Appeler la méthode pour créer l'utilisateur
+        $response = Utilisateur::creerUtilisateur($request);
     }
 
     // ===================== update_utilisateur =====================
