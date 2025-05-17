@@ -56,6 +56,9 @@ class ListeVehicule extends Model
         $lst_vehicule->lsv_veh_no = $vehicule->veh_no; // On utilise veh_no trouvé
         $lst_vehicule->save();
 
+        $vehicule->veh_disponible = false;
+        $vehicule->save();
+
     
         
         return $lst_vehicule;
@@ -81,6 +84,9 @@ class ListeVehicule extends Model
         ->first();
         $lst_vehicule->lsv_present = false;
         $lst_vehicule->save();
+
+        $vehicule->veh_disponible = true;
+        $vehicule->save();
         return $lst_vehicule;
     }
 

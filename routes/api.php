@@ -27,6 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/interventions', [InterventionController::class, 'get_interventions']);
+    Route::get('/interventions/dispo', [InterventionController::class, 'get_interventions_dispo']);
     Route::post('/interventions', [InterventionController::class, 'create_intervention']);
     Route::put('/interventions', [InterventionController::class, 'finish_intervention']);
     Route::get('/interventions/utilisateur/{id}', [ListeUtilisateurController::class, 'get_personne_intervenant']);
@@ -60,6 +61,11 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/admin/modifiervehicule/{id}', [VehiculeController::class, 'modifierVehicule']);
     Route::delete('/admin/supprimervehicule/{id}', [VehiculeController::class, 'deleteVehicule']);
     Route::get('/admin/utilisateur/{id}', [UtilisateurController::class, 'get_utilisateur_admin']);
+    Route::put('/notif/ajout', [UtilisateurController::class, 'ajouter_fcm_token']);
+    Route::get('/renfort-notification', [FirebaseTestController::class, 'sendRenfortNotification']);
+    Route::get('/send-firebase-notification', [FirebaseTestController::class, 'sendNotification']);
+    Route::get('/depart-notification', [FirebaseTestController::class, 'sendDepartNotification']);
+    Route::get('/arrive-notification', [FirebaseTestController::class, 'sendArriveNotification']);
     });
 
 
@@ -68,8 +74,7 @@ Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
 
 
-Route::get('/firebase-test', [FirebaseTestController::class, 'test']);
-Route::get('/send-firebase-notification', [FirebaseTestController::class, 'sendNotification']);
+
 
 
 

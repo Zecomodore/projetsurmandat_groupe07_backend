@@ -20,6 +20,12 @@ class Intervention extends Model
 
     public static function get_interventions(){
         $interventions = Intervention::all();
+        //$interventions = Intervention::where('int_en_cours', true)->get();
+        return $interventions;
+    }
+
+    public static function get_interventions_dispo(){
+        $interventions = Intervention::where('int_en_cours', true)->get();
         return $interventions;
     }
 
@@ -62,9 +68,20 @@ class Intervention extends Model
         ->where('lsu_int_no', $intervention->int_no)
         ->update(['lsu_present' => false]);
 
+    // 1. Mettre tous les lst_vehicule à "non présent"
     DB::table('lst_vehicule')
         ->where('lsv_int_no', $intervention->int_no)
         ->update(['lsv_present' => false]);
+
+    // 2. Mettre les véhicules liés à cette intervention à "disponible"
+    DB::table('vehicule')
+        ->whereIn('veh_no', function ($query) use ($intervention) {
+            $query->select('lsv_veh_no')
+                ->from('lst_vehicule')
+                ->where('lsv_int_no', $intervention->int_no);
+        })
+        ->update(['veh_disponible' => true]);
+
 
     return $intervention;
 }

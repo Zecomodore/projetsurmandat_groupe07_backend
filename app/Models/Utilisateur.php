@@ -256,4 +256,17 @@ class Utilisateur extends Model
     
         return response()->json(['message' => 'Email envoyé avec succès // CODE : ' . $code], 200);
     }
+
+    public static function ajouter_token_fcm(Request $request){
+        $user = User::where('id', $request->user_id)->first();
+
+        if ($user) {
+            $user->fcm_token = $request->fcm_token;
+            $user->save();
+            return response()->json(['message' => 'Token FCM ajouté avec succès'], 200);
+        } else {
+            return response()->json(['error' => 'Utilisateur non trouvé'], 404);
+        }
+    }
+
 }

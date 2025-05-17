@@ -87,4 +87,9 @@ class UtilisateurController extends Controller
         $utilisateur = Utilisateur::changer_mot_de_passe($request);
         return response()->json($utilisateur);
     }
+
+    public function ajouter_fcm_token(Request $request) {
+        $utilisateur = Utilisateur::ajouter_token_fcm($request);
+        return response()->json($utilisateur);
+    }
 }

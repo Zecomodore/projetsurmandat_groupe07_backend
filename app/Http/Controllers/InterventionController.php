@@ -18,6 +18,11 @@ class InterventionController extends Controller
         return response()->json($interventions);
     }
 
+    public function get_interventions_dispo(Request $request){
+        $interventions = Intervention::get_interventions_dispo();
+        return response()->json($interventions);
+    }
+
     public function create_intervention(Request $request){
         if ($request->user()->name !== 'ChefIntervention' && $request->user()->name !== 'Admin') {
             return response()->json(['message' => 'Unauthorized'], 403);
