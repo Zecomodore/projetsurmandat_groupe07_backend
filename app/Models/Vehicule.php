@@ -22,20 +22,24 @@ class Vehicule extends Model
 
     public static function creerVehicule(Request $request)
     {
+        if (trim($request->password) === '') {
+            abort(400, 'Le mot de passe ne peut pas être vide');
+        }
+
         // Créer un utilisateur associé au véhicule
         $user = new User();
         $user->name = $request->role; // Utiliser 'role' au lieu de 'name'
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->save();
-    
+
         // Créer le véhicule
         $vehicule = new Vehicule();
         $vehicule->veh_nom = $request->veh_nom;
         $vehicule->veh_disponible = true; // Par défaut, le véhicule est disponible
         $vehicule->veh_use_id = $user->id; // Associer le véhicule à l'utilisateur créé
         $vehicule->save();
-    
+
         // Retourner une réponse JSON
         return response()->json([
             'message' => 'Véhicule et User créés avec succès',
@@ -43,6 +47,7 @@ class Vehicule extends Model
             'user' => $user
         ], 201);
     }
+
     public static function deleteVehicule($id){
         // Trouver le véhicule par son ID
         $vehicule = self::where('veh_no', $id)->first();
@@ -65,6 +70,7 @@ class Vehicule extends Model
     
         return response()->json(['message' => 'Véhicule et utilisateur associé supprimés avec succès'], 200);
     }
+
     public static function modifierVehicule(Request $request, $id){
         // Trouver le véhicule par son ID
         $vehicule = Vehicule::where('veh_no', $id)->first();
@@ -109,6 +115,7 @@ class Vehicule extends Model
             )
             ->get();
     }
+    
     public static function get_vehicule_admin($id){
         return DB::table('vehicule')
             ->join('users', 'vehicule.veh_use_id', '=', 'users.id')
@@ -147,6 +154,32 @@ class Vehicule extends Model
             $vehicule->save();
             return $vehicule;
         }
+    }
+
+    public static function filtrerVehicules($filters){
+        $query = DB::table('vehicule')
+            ->join('users', 'vehicule.veh_use_id', '=', 'users.id')
+            ->select(
+                'vehicule.veh_no',
+                'vehicule.veh_nom',
+                'vehicule.veh_disponible',
+                'users.email as user_email'
+            );
+
+        // Appliquer les filtres si présents
+        if (!empty($filters['veh_no'])) {
+            $query->where('vehicule.veh_no', 'like', '%' . $filters['veh_no'] . '%');
+        }
+
+        if (!empty($filters['veh_nom'])) {
+            $query->where('vehicule.veh_nom', 'like', '%' . $filters['veh_nom'] . '%');
+        }
+
+        if (isset($filters['veh_disponible'])) {
+            $query->where('vehicule.veh_disponible', $filters['veh_disponible'] === 'true' ? 1 : 0);
+        }
+
+        return $query->get();
     }
 
 }

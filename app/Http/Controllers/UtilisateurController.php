@@ -92,4 +92,18 @@ class UtilisateurController extends Controller
         $utilisateur = Utilisateur::ajouter_token_fcm($request);
         return response()->json($utilisateur);
     }
+
+    public function filtrerUtilisateurs(Request $request)
+    {
+        $filters = [
+            'nom' => $request->input('nom'),
+            'prenom' => $request->input('prenom'),
+            'disponible' => $request->input('disponible'),
+            'role' => $request->input('role'),
+        ];
+
+        $resultats = Utilisateur::filtrerUtilisateurs($filters);
+
+        return response()->json($resultats, 200);
+    }
 }

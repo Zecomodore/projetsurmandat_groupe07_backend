@@ -86,4 +86,34 @@ class Intervention extends Model
     return $intervention;
 }
 
+     public static function filtrerUrgences($filters)
+    {
+        $query = DB::table('intervention');
+
+        if (!empty($filters['debutDate'])) {
+            $query->where('int_date', '>=', $filters['debutDate']);
+        }
+
+        if (!empty($filters['finDate'])) {
+            $query->where('int_date', '<=', $filters['finDate']);
+        }
+
+        if (!empty($filters['debutHeure'])) {
+            $query->where('int_heure', '>=', $filters['debutHeure']);
+        }
+
+        if (!empty($filters['finHeure'])) {
+            $query->where('int_heure', '<=', $filters['finHeure']);
+        }
+
+        if (!empty($filters['typeIntervention'])) {
+            $query->where('int_description', 'like', '%' . $filters['typeIntervention'] . '%');
+        }
+
+        if (isset($filters['enCours'])) {
+            $query->where('int_en_cours', $filters['enCours'] === 'true' ? 1 : 0);
+        }
+
+        return $query->get();
+    }
 }

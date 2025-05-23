@@ -40,4 +40,21 @@ class InterventionController extends Controller
         $intervention = Intervention::finish_intervention($request);
         return response()->json($intervention);
     }
+
+    public function filtrerUrgences(Request $request)
+    {
+        $filters = [
+            'debutDate' => $request->input('debutDate'),
+            'finDate' => $request->input('finDate'),
+            'debutHeure' => $request->input('debutHeure'),
+            'finHeure' => $request->input('finHeure'),
+            'typeIntervention' => $request->input('typeIntervention'),
+            'enCours' => $request->input('enCours'),
+        ];
+
+        $resultats = Intervention::filtrerUrgences($filters);
+
+        return response()->json($resultats, 200);
+    }
+
 }

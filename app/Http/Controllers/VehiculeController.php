@@ -52,4 +52,16 @@ class VehiculeController extends Controller
         $vehicule = Vehicule::vehicule_disponible($request);
         return response()->json($vehicule);
     }
+
+    public function filtrerVehicules(Request $request){
+        $filters = [
+            'veh_no' => $request->input('veh_no'),
+            'veh_nom' => $request->input('veh_nom'),
+            'veh_disponible' => $request->input('veh_disponible'),
+        ];
+
+        $resultats = Vehicule::filtrerVehicules($filters);
+
+        return response()->json($resultats, 200);
+    }
 }

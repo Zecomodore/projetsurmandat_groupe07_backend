@@ -33,7 +33,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/interventions/utilisateur/{id}', [ListeUtilisateurController::class, 'get_personne_intervenant']);
     Route::get('/interventions/vehicule/{id}', [ListeVehiculeController::class, 'get_vehicule_intervention']);
     Route::get('/utilisateur/info/{id}',[UtilisateurController::class, 'get_utilisateur']);
-    Route::get('/utilisateurs', [UtilisateurController::class, 'get_all_utilisateurs']);
+    //Route::get('/utilisateurs', [UtilisateurController::class, 'get_all_utilisateurs']);
     Route::get('/vehicule/info/{id}',[VehiculeController::class, 'get_vehicule']);
     Route::put('/vehicule/indisponible', [VehiculeController::class, 'vehicule_indisponible']);
     Route::put('/vehicule/disponible', [VehiculeController::class, 'vehicule_disponible']);
@@ -61,7 +61,10 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::put('/admin/modifiervehicule/{id}', [VehiculeController::class, 'modifierVehicule']);
     Route::delete('/admin/supprimervehicule/{id}', [VehiculeController::class, 'deleteVehicule']);
     Route::get('/admin/utilisateur/{id}', [UtilisateurController::class, 'get_utilisateur_admin']);
-    Route::put('/notif/ajout', [UtilisateurController::class, 'ajouter_fcm_token']);
+    Route::get('/admin/interventions/filtrerIntervention', [InterventionController::class, 'filtrerUrgences']);
+    Route::get('/admin/utilisateurs/filtrerUti', [UtilisateurController::class, 'filtrerUtilisateurs']);
+    Route::get('/admin/vehicules/filtrerVehicule', [VehiculeController::class, 'filtrerVehicules']);
+    //Route::put('/notif/ajout', [UtilisateurController::class, 'ajouter_fcm_token']);
     Route::get('/renfort-notification', [FirebaseTestController::class, 'sendRenfortNotification']);
     Route::get('/send-firebase-notification', [FirebaseTestController::class, 'sendNotification']);
     Route::get('/depart-notification', [FirebaseTestController::class, 'sendDepartNotification']);

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MyMail;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Hash;
 
 
 class UtilisateurTest extends TestCase
@@ -59,18 +60,18 @@ class UtilisateurTest extends TestCase
     {
         $response = Utilisateur::get_all_utilisateurs();
 
-        $this->assertCount(5, $response->original);
-        $this->assertEquals(200, $response->status());
-        $this->assertEquals('Jean', $response->original[0]->uti_prenom);
-        $this->assertEquals('Dupont', $response->original[0]->uti_nom);
-        $this->assertEquals('Paul', $response->original[1]->uti_prenom);
-        $this->assertEquals('Martin', $response->original[1]->uti_nom);
-        $this->assertEquals('bryan', $response->original[2]->uti_prenom);
-        $this->assertEquals('Barros', $response->original[2]->uti_nom);
-        $this->assertEquals('Kilian', $response->original[3]->uti_prenom);
-        $this->assertEquals('Lam', $response->original[3]->uti_nom);
-        $this->assertEquals('admin', $response->original[4]->uti_prenom);
-        $this->assertEquals('admin', $response->original[4]->uti_nom);
+        $this->assertCount(5, $response);
+        // Vérifier les données des utilisateurs
+        $this->assertEquals('Jean', $response[0]->uti_prenom);
+        $this->assertEquals('Dupont', $response[0]->uti_nom);
+        $this->assertEquals('Paul', $response[1]->uti_prenom);
+        $this->assertEquals('Martin', $response[1]->uti_nom);
+        $this->assertEquals('bryan', $response[2]->uti_prenom);
+        $this->assertEquals('Barros', $response[2]->uti_nom);
+        $this->assertEquals('Kilian', $response[3]->uti_prenom);
+        $this->assertEquals('Lam', $response[3]->uti_nom);
+        $this->assertEquals('admin', $response[4]->uti_prenom);
+        $this->assertEquals('admin', $response[4]->uti_nom);
     }
 
     // ===================== utilisateur_indisponible =====================
@@ -251,7 +252,6 @@ class UtilisateurTest extends TestCase
         $this->assertNotEquals($code1, $code2);
     }
 
-
     // ===================== envoyer_email =====================
     /** @test */
     public function test_envoyer_email_succes()
@@ -269,7 +269,6 @@ class UtilisateurTest extends TestCase
         // Vérifie que la réponse HTTP retourne un code 200 (succès)
         $this->assertEquals(200, $response->status());
     }
-
 
     /** @test */
     public function test_envoyer_email_error()
@@ -290,4 +289,166 @@ class UtilisateurTest extends TestCase
             $this->assertEquals('Cet email ne correspond à aucun compte', $e->getMessage());
         }
     }
+
+    // ===================== get_utilisateur_admin =====================
+    /** @test */
+    public function test_get_utilisateur_admin_succes()
+    {
+        // Appeler la méthode à tester
+        $response = Utilisateur::get_utilisateur_admin(5);
+
+        // Vérifier que la réponse n'est pas nulle
+        $this->assertNotNull($response);
+
+        // Vérifier les résultats
+        $this->assertEquals('admin', $response->uti_prenom);
+        $this->assertEquals('admin', $response->uti_nom);
+    }
+
+    /** @test */
+    public function test_get_utilisateur_admin_error()
+    {
+        $response = Utilisateur::get_utilisateur_admin(999);
+
+        $this->assertNull($response);
+    }
+
+    // ===================== creerUtilisateur =====================
+    /** @test */
+    public function test_creer_utilisateur_succes()
+    {
+        // Créer une requête simulée avec des données d'utilisateur
+        $request = new Request([
+            'name' => 'test',
+            'email' => 'test@gmail.com',
+            'password' => 'test1234',
+            'nom' => 'www',
+            'prenom' => 'www',
+        ]);
+
+        // Appeler la méthode pour créer l'utilisateur
+        $response = Utilisateur::creerUtilisateur($request);
+
+        // Extraire les données de la réponse JSON
+        $data = $response->getData(true);
+
+        $this->assertEquals(201, $response->status());
+        // Vérifier que les données d'utilisateur sont présentes et correctes
+        $this->assertEquals('www', $data['utilisateur']['uti_prenom']);
+        $this->assertEquals('www', $data['utilisateur']['uti_nom']);
+        $this->assertEquals('test', $data['user']['name']);
+        $this->assertEquals('test@gmail.com', $data['user']['email']);
+        
+    }
+
+    /** @test */
+    public function test_creer_utilisateur_mdp_vide()
+    {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectExceptionMessage('Le mot de passe ne peut pas être vide');
+
+        // Créer une requête simulée avec des données d'utilisateur
+        $request = new Request([
+            'name' => 'test',
+            'email' => 'test@gmail.com',
+            'password' => '',
+            'nom' => 'www',
+            'prenom' => 'www',
+        ]);
+
+        // Appeler la méthode pour créer l'utilisateur
+        $response = Utilisateur::creerUtilisateur($request);
+    }
+
+    // ===================== update_utilisateur =====================
+    /** @test */
+    public function test_update_utilisateur_succes()
+    {
+        // Requête de mise à jour avec un mot de passe valide
+        $request = new Request([
+            'nom' => 'NouveauNom',
+            'prenom' => 'NouveauPrenom',
+            'email' => 'newemail@example.com',
+            'name' => 'NewName',
+            'ancien_mot_de_passe' => '123',
+            'nouveau_mot_de_passe' => '55555'
+        ]);
+
+        $response = Utilisateur::update_utilisateur($request, 4); 
+
+        $this->assertNotNull($response);
+        $this->assertEquals('NouveauNom', $response->uti_nom);
+        $this->assertEquals('NouveauPrenom', $response->uti_prenom);
+    }
+
+    /** @test */
+        public function test_update_utilisateur_ancien_mdp_faux()
+    {
+        // Requête de mise à jour avec un mot de passe valide
+        $request = new Request([
+            'nom' => 'NouveauNom',
+            'prenom' => 'NouveauPrenom',
+            'email' => 'newemail@example.com',
+            'name' => 'NewName',
+            'ancien_mot_de_passe' => '12345',
+            'nouveau_mot_de_passe' => 'new_password'
+        ]);
+
+        $response = Utilisateur::update_utilisateur($request, 4); 
+
+        $this->assertFalse($response);
+    }
+
+    /** @test */
+    public function test_update_utilisateur_mot_de_passe_vide()
+    {
+        $this->expectException(\Symfony\Component\HttpKernel\Exception\HttpException::class);
+        $this->expectExceptionMessage('Le mot de passe ne peut pas être vide');
+
+        $request = new Request([
+            'nom' => 'NomInexistant',
+            'prenom' => 'PrenomInexistant',
+            'email' => 'inexistant@example.com',
+            'name' => 'Inexistant',
+            'ancien_mot_de_passe' => '123',
+            'nouveau_mot_de_passe' => ''
+        ]);
+
+        Utilisateur::update_utilisateur($request, 4);
+    }
+
+    /** @test */
+    public function test_update_utilisateur_utilisateur_non_trouve()
+    {
+        $request = new Request([
+            'nom' => 'NomInexistant',
+            'prenom' => 'PrenomInexistant',
+            'email' => 'inexistant@example.com',
+            'name' => 'Inexistant',
+            'ancien_mot_de_passe' => '12345',
+            'nouveau_mot_de_passe' => 'new_password'
+        ]);
+
+        $response = Utilisateur::update_utilisateur($request, 999); // ID inexistant
+
+        $this->assertNull($response);
+    }
+
+    // ===================== delete_utilisateur =====================
+    /** @test */
+    public function test_delete_utilisateur_succes()
+    {
+        $response = Utilisateur::delete_utilisateur(4);
+
+        $this->assertTrue($response);
+    }
+
+    /** @test */
+    public function test_delete_utilisateur_error()
+    {
+        $response = Utilisateur::delete_utilisateur(999);
+
+        $this->assertFalse($response);
+    }
+
 }

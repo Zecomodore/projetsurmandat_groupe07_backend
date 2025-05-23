@@ -84,61 +84,70 @@ class Utilisateur extends Model
         return true; // Retourne true si la suppression a réussi
     }
 
-    public static function update_utilisateur(Request $request, $id)
+   public static function update_utilisateur(Request $request, $id)
     {
         $utilisateur = self::where('uti_no', $id)->first();
-    
+
         if (!$utilisateur) {
             return null; // Retourne null si l'utilisateur n'est pas trouvé
         }
-    
+
         $user = User::where('id', $utilisateur->uti_use_id)->first();
-    
+
         if (!$user) {
             return null; // Retourne null si le User n'est pas trouvé
         }
-    
+
         // Mettre à jour les informations de base
         $utilisateur->uti_nom = $request->input('nom', $utilisateur->uti_nom);
         $utilisateur->uti_prenom = $request->input('prenom', $utilisateur->uti_prenom);
         $user->email = $request->input('email', $user->email);
         $user->name = $request->input('name', $user->name);
-    
+
         // Vérifier et mettre à jour le mot de passe
         if ($request->filled('ancien_mot_de_passe') && $request->filled('nouveau_mot_de_passe')) {
             if (!Hash::check($request->input('ancien_mot_de_passe'), $user->password)) {
-                return false; // Retourne false si l'ancien mot de passe est incorrect
+                return false; // Ancien mot de passe incorrect
             }
-    
+
             $user->password = Hash::make($request->input('nouveau_mot_de_passe'));
         }
-    
+        else {
+            abort(400, 'Le mot de passe ne peut pas être vide');
+        }
+
         $utilisateur->save();
         $user->save();
-    
+
         return $utilisateur; // Retourne l'utilisateur mis à jour
     }
+
     public static function creerUtilisateur(Request $request)
     {
-    $user = new User();
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->password =  Hash::make($request->password);
-    $user->save();
+        if (trim($request->password) === '') {
+            abort(400, 'Le mot de passe ne peut pas être vide');
+        }
 
-    $utilisateur = new Utilisateur();
-    $utilisateur->uti_nom = $request->nom;
-    $utilisateur->uti_prenom = $request->prenom;
-    $utilisateur->uti_disponible = true;
-    $utilisateur->uti_use_id = $user->id;
-    $utilisateur->save();
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
 
-    return response()->json([
-        'message' => 'Utilisateur et User créés avec succès',
-        'utilisateur' => $utilisateur,
-        'user' => $user
-    ], 201);
+        $utilisateur = new Utilisateur();
+        $utilisateur->uti_nom = $request->nom;
+        $utilisateur->uti_prenom = $request->prenom;
+        $utilisateur->uti_disponible = true;
+        $utilisateur->uti_use_id = $user->id;
+        $utilisateur->save();
+
+        return response()->json([
+            'message' => 'Utilisateur et User créés avec succès',
+            'utilisateur' => $utilisateur,
+            'user' => $user
+        ], 201);
     }
+
     public static function get_utilisteur($id){
         $utilisateur = Utilisateur::where('uti_use_id', $id)->get();
         return $utilisateur;
@@ -269,4 +278,37 @@ class Utilisateur extends Model
         }
     }
 
+
+    public static function filtrerUtilisateurs($filters)
+    {
+        $query = DB::table('utilisateur')
+            ->join('users', 'utilisateur.uti_use_id', '=', 'users.id')
+            ->select(
+                'utilisateur.uti_no',
+                'utilisateur.uti_nom',
+                'utilisateur.uti_prenom',
+                'utilisateur.uti_disponible',
+                'users.name as user_name',
+                'users.email as user_email'
+            );
+
+        // Appliquer les filtres si présents
+        if (!empty($filters['nom'])) {
+            $query->where('utilisateur.uti_nom', 'like', '%' . $filters['nom'] . '%');
+        }
+
+        if (!empty($filters['prenom'])) {
+            $query->where('utilisateur.uti_prenom', 'like', '%' . $filters['prenom'] . '%');
+        }
+
+        if (isset($filters['disponible'])) {
+            $query->where('utilisateur.uti_disponible', $filters['disponible'] === 'true' ? 1 : 0);
+        }
+
+        if (!empty($filters['role'])) {
+            $query->where('users.name', $filters['role']);
+        }
+
+        return $query->get();
+    }
 }
