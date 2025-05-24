@@ -87,38 +87,35 @@ class Utilisateur extends Model
    public static function update_utilisateur(Request $request, $id)
     {
         $utilisateur = self::where('uti_no', $id)->first();
-
+    
         if (!$utilisateur) {
             return null; // Retourne null si l'utilisateur n'est pas trouvé
         }
-
+    
         $user = User::where('id', $utilisateur->uti_use_id)->first();
-
+    
         if (!$user) {
             return null; // Retourne null si le User n'est pas trouvé
         }
-
+    
         // Mettre à jour les informations de base
         $utilisateur->uti_nom = $request->input('nom', $utilisateur->uti_nom);
         $utilisateur->uti_prenom = $request->input('prenom', $utilisateur->uti_prenom);
         $user->email = $request->input('email', $user->email);
         $user->name = $request->input('name', $user->name);
-
+    
         // Vérifier et mettre à jour le mot de passe
         if ($request->filled('ancien_mot_de_passe') && $request->filled('nouveau_mot_de_passe')) {
             if (!Hash::check($request->input('ancien_mot_de_passe'), $user->password)) {
-                return false; // Ancien mot de passe incorrect
+                return false; // Retourne false si l'ancien mot de passe est incorrect
             }
-
+    
             $user->password = Hash::make($request->input('nouveau_mot_de_passe'));
         }
-        else {
-            abort(400, 'Le mot de passe ne peut pas être vide');
-        }
-
+    
         $utilisateur->save();
         $user->save();
-
+    
         return $utilisateur; // Retourne l'utilisateur mis à jour
     }
 
