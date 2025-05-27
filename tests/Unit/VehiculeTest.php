@@ -170,4 +170,24 @@ class VehiculeTest extends TestCase
         $data = json_decode($response->getContent(), true);
         $this->assertEquals('Véhicule non trouvé', $data['message']);
     }
+
+    // ===================== filtrerVehicules =====================
+    /** @test */
+    public function testFiltrageVehiculeAvecDifferentsFiltres()
+    {
+        // Filtrer par nom
+        $result = Vehicule::filtrerVehicules(['veh_nom' => 'Camion de pompiers']);
+        $this->assertCount(1, $result);
+        $this->assertEquals('Camion de pompiers', $result[0]->veh_nom);
+
+        // Filtrer par disponibilité
+        $result = Vehicule::filtrerVehicules(['veh_disponible' => 'true']);
+        $this->assertCount(1, $result);
+        $this->assertTrue((bool) $result[0]->veh_disponible);
+
+        // Pas de véhicule correspondant
+        $result = Vehicule::filtrerVehicules(['veh_nom' => 'eee']);
+        $this->assertCount(0, $result);
+        $this->assertNull($result->first());
+    }    
 }

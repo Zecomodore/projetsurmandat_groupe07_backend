@@ -11,7 +11,7 @@ class VehiculeSeeder extends Seeder
     public function run()
     {
         DB::table('vehicule')->insert([
-            ['veh_nom' => 'Camion de pompiers', 'veh_disponible' => 1, 'veh_use_id' => 2],
+            ['veh_nom' => 'Camion de pompiers', 'veh_disponible' => true, 'veh_use_id' => 2],
         ]);
     }
 }
