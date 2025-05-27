@@ -44,8 +44,8 @@ class FirebaseTestController extends Controller
         }
     }
 
-    /*
-    public function sendNotification()
+    
+    public function sendNotificationTest()
     {
         try {
             $factory = (new Factory)->withServiceAccount(base_path('app/firebase/firebase-credentials.json'));
@@ -66,7 +66,7 @@ class FirebaseTestController extends Controller
             ], 500);
         }
     }
-       */ 
+       
     
     public function sendNotification()
     {
@@ -91,7 +91,6 @@ class FirebaseTestController extends Controller
                 ->pluck('users.fcm_token')
                 ->toArray();
 
-            //Log::info('🎯 Tokens utilisateur :', ['tokens' => $usersDispo]);
 
             $vehiculesDispo = DB::table('users')
                 ->join('vehicule', 'users.id', '=', 'vehicule.veh_use_id')
@@ -100,14 +99,14 @@ class FirebaseTestController extends Controller
                 ->pluck('users.fcm_token')
                 ->toArray();
 
-            //Log::info('🎯 Tokens véhicule :', ['tokens' => $vehiculesDispo]);
 
             foreach ($vehiculesDispo as $tokenVehicule) {
-                Log::info('🎯 Token véhicule ajouté :', [$tokenVehicule]);
+                Log::info(' Token véhicule ajouté :', [$tokenVehicule]);
                 $usersDispo[] = $tokenVehicule; 
             }
+            
+            Log::info('Liste complète des tokens destinataires :', $usersDispo);
 
-            //Log::info('🎯 Tokens sélectionnés :', ['tokens' => $usersDispo]);
 
             foreach ($usersDispo as $token) {
             try {
@@ -118,9 +117,7 @@ class FirebaseTestController extends Controller
                     ));
 
                 $messaging->send($message);
-                //Log::info("✅ Notification envoyée à : $token");
             } catch (\Throwable $e) {
-                //Log::error("❌ Erreur envoi notification FCM ($token) : " . $e->getMessage());
             }
         }
 
@@ -155,7 +152,6 @@ class FirebaseTestController extends Controller
                 ->pluck('users.fcm_token')
                 ->toArray();
 
-            //Log::info('🎯 Tokens utilisateur :', ['tokens' => $usersDispo]);
 
             $vehiculesDispo = DB::table('users')
                 ->join('vehicule', 'users.id', '=', 'vehicule.veh_use_id')
@@ -164,14 +160,12 @@ class FirebaseTestController extends Controller
                 ->pluck('users.fcm_token')
                 ->toArray();
 
-            //Log::info('🎯 Tokens véhicule :', ['tokens' => $vehiculesDispo]);
 
             foreach ($vehiculesDispo as $tokenVehicule) {
-                Log::info('🎯 Token véhicule ajouté :', [$tokenVehicule]);
+                Log::info(' Token véhicule ajouté :', [$tokenVehicule]);
                 $usersDispo[] = $tokenVehicule; 
             }
 
-            //Log::info('🎯 Tokens sélectionnés :', ['tokens' => $usersDispo]);
 
             foreach ($usersDispo as $token) {
             try {
@@ -182,9 +176,7 @@ class FirebaseTestController extends Controller
                     ));
 
                 $messaging->send($message);
-                //Log::info("✅ Notification envoyée à : $token");
             } catch (\Throwable $e) {
-                //Log::error("❌ Erreur envoi notification FCM ($token) : " . $e->getMessage());
             }
         }
 
@@ -227,9 +219,6 @@ class FirebaseTestController extends Controller
                 ->first();
             
 
-            //Log::info('🎯 Tokens utilisateur  depart :', ['tokens' => $usersDispo]);
-
-            //Log::info('🎯 Tovehicule :', [$vehicule]);
 
             foreach ($usersDispo as $token) {
             try {
@@ -240,9 +229,7 @@ class FirebaseTestController extends Controller
                     ));
 
                 $messaging->send($message);
-                //Log::info("✅ Notification envoyée à : $token");
             } catch (\Throwable $e) {
-                //Log::error("❌ Erreur envoi notification FCM ($token) : " . $e->getMessage());
             }
         }
 
@@ -278,7 +265,6 @@ class FirebaseTestController extends Controller
                 ->pluck('users.fcm_token')
                 ->toArray();
 
-            //Log::info('🎯 Tokens utilisateur :', ['tokens' => $usersDispo]);
 
             $vehicule = DB::table('users')
                 ->join('vehicule', 'users.id', '=', 'vehicule.veh_use_id')
@@ -287,8 +273,7 @@ class FirebaseTestController extends Controller
                 ->first();
 
             
-            //Log::info('🎯 Tokens sélectionnés :', ['tokens' => $usersDispo]);
-
+           
             foreach ($usersDispo as $token) {
             try {
                 $message = CloudMessage::withTarget('token', $token)
@@ -298,9 +283,9 @@ class FirebaseTestController extends Controller
                     ));
 
                 $messaging->send($message);
-                //Log::info("✅ Notification envoyée à : $token");
+                
             } catch (\Throwable $e) {
-                //Log::error("❌ Erreur envoi notification FCM ($token) : " . $e->getMessage());
+                
             }
         }
 

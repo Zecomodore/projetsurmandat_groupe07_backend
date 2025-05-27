@@ -64,7 +64,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('/admin/interventions/filtrerIntervention', [InterventionController::class, 'filtrerUrgences']);
     Route::get('/admin/utilisateurs/filtrerUti', [UtilisateurController::class, 'filtrerUtilisateurs']);
     Route::get('/admin/vehicules/filtrerVehicule', [VehiculeController::class, 'filtrerVehicules']);
-    //Route::put('/notif/ajout', [UtilisateurController::class, 'ajouter_fcm_token']);
+    Route::put('/notif/ajout', [UtilisateurController::class, 'ajouter_fcm_token']);
     Route::get('/renfort-notification', [FirebaseTestController::class, 'sendRenfortNotification']);
     Route::get('/send-firebase-notification', [FirebaseTestController::class, 'sendNotification']);
     Route::get('/depart-notification', [FirebaseTestController::class, 'sendDepartNotification']);
@@ -75,6 +75,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
+
+Route::get('/test/fire', [FirebaseTestController::class, 'sendNotificationTest']);
 
 
 
