@@ -44,7 +44,7 @@ class FirebaseTestController extends Controller
         }
     }
 
-    
+    /*
     public function sendNotificationTest()
     {
         try {
@@ -66,6 +66,7 @@ class FirebaseTestController extends Controller
             ], 500);
         }
     }
+        */
        
     
     public function sendNotification()

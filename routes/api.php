@@ -76,7 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
 Route::post('/envoie', [UtilisateurController::class, 'envoie_email']);
 Route::post('/validation', [UtilisateurController::class, 'code_validation']);
 
-Route::get('/test/fire', [FirebaseTestController::class, 'sendNotificationTest']);
+//Route::get('/test/fire', [FirebaseTestController::class, 'sendNotificationTest']);
 
 
 
