@@ -451,4 +451,36 @@ class UtilisateurTest extends TestCase
         $this->assertFalse($response);
     }
 
+    // ===================== filtrerUtilisateurs =====================
+    /** @test */
+    public function testFiltrageUtilisateursAvecDifferentsFiltres()
+    {
+        // Filtrer par nom
+        $result = Utilisateur::filtrerUtilisateurs(['nom' => 'Lam']);
+        $this->assertCount(1, $result);
+        $this->assertEquals('Lam', $result[0]->uti_nom);
+
+        // Filtrer par prénom
+        $result = Utilisateur::filtrerUtilisateurs(['prenom' => 'Kilian']);
+        $this->assertCount(1, $result);
+        $this->assertEquals('Kilian', $result[0]->uti_prenom);
+
+        // Filtrer par disponibilité
+        $result = Utilisateur::filtrerUtilisateurs(['disponible' => 'true']);
+        $this->assertCount(5, $result);
+        $this->assertTrue((bool) $result[0]->uti_disponible);
+
+        // Filtrer par rôle
+        $result = Utilisateur::filtrerUtilisateurs(['role' => 'SapeurPompier']);
+        $this->assertCount(3, $result);
+        $this->assertEquals('sapeur@gmail.com', $result[0]->user_email);
+        $this->assertEquals('brn.barros.01@gmail.com', $result[1]->user_email);
+        $this->assertEquals('kiliansalut@gmail.com', $result[2]->user_email);
+
+        // Pas d'utilisateur correspondant
+        $result = Utilisateur::filtrerUtilisateurs(['nom' => 'eee']);
+        $this->assertCount(0, $result);
+        $this->assertNull($result->first());
+    }
+
 }
